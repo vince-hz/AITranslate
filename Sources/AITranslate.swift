@@ -45,6 +45,12 @@ struct AITranslate: AsyncParsableCommand {
   @Flag(name: .shortAndLong)
   var verbose: Bool = false
 
+  @Option(
+    name: [.customShort("H"), .long],
+    help: ArgumentHelp("The OpenAI host to use.")
+  )
+  var openAIHost: String = "api.openai.com"
+  
   @Flag(
     name: .shortAndLong,
     help: ArgumentHelp("By default a backup of the input will be created. When this flag is provided, the backup is skipped.")
@@ -61,6 +67,7 @@ struct AITranslate: AsyncParsableCommand {
     let configuration = OpenAI.Configuration(
       token: openAIKey,
       organizationIdentifier: nil,
+      host: openAIHost.hasPrefix("https://") ? String(openAIHost.dropFirst(8)) : openAIHost,
       timeoutInterval: 60.0
     )
 
